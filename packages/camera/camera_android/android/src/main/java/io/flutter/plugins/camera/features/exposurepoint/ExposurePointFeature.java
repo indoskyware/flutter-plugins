@@ -69,12 +69,23 @@ public class ExposurePointFeature extends CameraFeature<Point> {
 
   @Override
   public void updateBuilder(CaptureRequest.Builder requestBuilder) {
+  //    if (!checkIsSupported()) {
+  //      return;
+  //    }
+  //    requestBuilder.set(
+  //        CaptureRequest.CONTROL_AF_REGIONS,
+  //        focusRectangle == null ? null : new MeteringRectangle[] {focusRectangle});
     if (!checkIsSupported()) {
       return;
     }
-    requestBuilder.set(
-        CaptureRequest.CONTROL_AE_REGIONS,
-        exposureRectangle == null ? null : new MeteringRectangle[] {exposureRectangle});
+    final MeteringRectangle[] er = focusRectangle == null ? requestBuilder.get(CaptureRequest.CONTROL_AE_REGIONS) : new MeteringRectangle[]{focusRectangle};
+    if (er != null) {
+      requestBuilder.set(
+              CaptureRequest.CONTROL_AE_REGIONS,
+              er);
+    }
+    // TODO remove
+    Log.d("ExposurePointFeature","updateBuilder");
   }
 
   private void buildExposureRectangle() {
